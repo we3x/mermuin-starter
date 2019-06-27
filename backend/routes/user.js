@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken");
 
 router.get('/me', (req, res) => {
   jwt.verify(req.header.token, constants.secret_key, (err, decoded) => {
-    if(err) res.status(403).json({ errors: {token: "Invalid token"}});
-    res.statis(200).json({user: decoded})
+    if(err) return res.status(403).json({ errors: {token: "Invalid token"}});
+    res.status(200).json({user: decoded})
   })
   
 })
