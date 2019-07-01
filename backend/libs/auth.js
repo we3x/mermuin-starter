@@ -30,17 +30,16 @@ const createJWToken = (data) => {
 };
 
 const hashPassword = (password) => {
-  let promise =  new Promise((resolve, reject) => {
-    bcrypt.genSalt(10)
-    .then(salt => {
-      bcrypt.hash(password, salt)
-        .then(hash => resolve(hash))
-        .catch(err => reject(err));
-    })
-    .catch(err => reject(err));
+  let promise =  new Promise(async (resolve, reject) => {
+    try {
+      let salt = await bcrypt.genSalt(10);
+      let hash = await bcrypt.hash(password, salt);
+    } catch(err) {
+      reject(err);
+    }
   });
   return promise;
-}
+};
 
 
 module.exports = {
