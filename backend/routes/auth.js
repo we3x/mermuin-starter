@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+<<<<<<< HEAD
+const { createJWToken, hashPassword } = require('../libs/auth')
+=======
 const constants = require("../constants")
 const jwt = require("jsonwebtoken");
+>>>>>>> 5867f216debeb78aea4f0ff34b3319980740e2c0
 
 
 const validateLoginInput = require('../validation/login');
@@ -23,17 +27,15 @@ router.post('/register', (req, res) => {
       res.status(400).json({ errors: { email: "Email already exist in database"}})
     } else {
       const newUser = User(req.body);
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if(err) throw err;
-
-          newUser.password = hash;
-          newUser
-          .save()
-          .then(user => res.json(user))
-          .catch(err => console.log(`[error] ${err}`));
-        });
-      });
+      hashPassword(newUser.password)
+      .then((hash) => {
+        newUser.password = hash
+        newUser
+        .save()
+        .then(user => res.json(user))
+        .catch(err => console.log(`[error] User save ${err}`))
+      })
+      .catch(err => console.log(`[error] Hash password ${err}`))
     }
   });
 });
@@ -47,26 +49,16 @@ router.post('/login', (req, res) => {
   }
 
   User.findOne({ email: email}).select('+password').exec((err, user) => {
-    if(!user) {
+    if(!user || err) {
       res.status(404).json({ errors: { email: "Couldn't find account with that email"}});
     } else {
       bcrypt.compare(password, user.password).then(isMatch => {
         if(isMatch) {
-          jwt.sign(
-            {
-              id: user.id
-            },
-            constants.secret_key,
-            {
-              expiresIn: 2592000 // 30 days
-            },
-            (err, token) => {
-              res.json({
-                success: true,
-                token: `${token}`
-              })
-            }
-          )
+          let token = createJWToken({id: user.id})
+          return res.json({
+            success: true,
+            token: `${token}`
+          })
         } else {
           return res.status(403).json({ errors: { password: "Password incorrect"}});
         }
