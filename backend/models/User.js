@@ -21,14 +21,19 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.pre('save', function(next) {
-  hashPassword(this.password)
-    .then((hash) => {
-      this.password = hash;
-      this.save();
-      return next();
-    });
-
+UserSchema.pre('save', async function(next) {
+  try {
+    let hash = await hashPassword(this.password);
+    this.password = hash;
+    this
+      .save()
+      .catch(err => {
+        console.log(`[error] error in save user ${err}`);
+      });
+    return next();
+  }catch(err) {
+    console.log(`[error] error in hashing password ${err}`);
+  }
 });
 
 const User = mongoose.model("users", UserSchema);
