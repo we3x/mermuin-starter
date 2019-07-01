@@ -4,8 +4,10 @@ const constants = require("../constants")
 const jwt = require("jsonwebtoken");
 
 router.get('/me', (req, res) => {
-  jwt.verify(req.header.token, constants.secret_key, (err, decoded) => {
-    if(err) return res.status(403).json({ errors: {token: "Invalid token"}});
+  jwt.verify(req.header('Authorization'), constants.secret_key, (err, decoded) => {
+    if(err) {
+      return res.status(403).json({ errors: {token: "Invalid token"}});
+    }
     res.status(200).json({user: decoded})
   })
   
