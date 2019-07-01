@@ -2,29 +2,25 @@ version: '3.4'
 services:
   db:
     image: mongo:latest
+    ports:
+      - "27017:27017"
 
   api:
     build: ./backend
     volumes:
-      - ./backend:/usr/src/api
-      - ./backend/node_modules:/usr/src/api/node_modules
+      - ./backend:/api
     depends_on:
       - db
     ports:
       - "5000:5000"
-    command:
-      sh -c 'node index.js'
+    command: npm start
     environment:
       NODE_ENV: development
-    stdin_open: true
-    tty: true
-
 
   frontend:
     build: ./frontend
     command: npm start
     volumes:
-      - ./frontend:/usr/src/frontend
-      - /frontend/node_modules
+      - ./frontend:/frontend
     ports:
       - "3000:3000"
