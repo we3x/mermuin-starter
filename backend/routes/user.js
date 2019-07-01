@@ -3,21 +3,21 @@ const router = express.Router()
 const constants = require("../constants")
 const jwt = require("jsonwebtoken");
 
+const { verifyJWToken } = require('../libs/auth')
+
 const User = require('../models/User');
 
 router.get('/me', (req, res) => {
-  jwt.verify(req.header('Authorization'), constants.secret_key, (err, decoded) => {
-    if(err) {
-      return res.status(403).json({ errors: {token: "Invalid token"}});
-    }
-    const { id } = decoded;
+  verifyJWToken(req.header('Authorization'))
+  .then(data => {
+    const { id } = data;
     User.findById(id, (err, user) => {
-      delete user.password
       return res.json(user)
     })
-
   })
-  
+  .catch(err => {
+    res.status(403).json({errors: {token: "Invalid token"}})
+  })
 })
 
 module.exports = router;
