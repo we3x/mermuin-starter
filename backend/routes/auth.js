@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+<<<<<<< HEAD
 const { createJWToken, hashPassword } = require('../libs/auth')
+=======
+const constants = require("../constants")
+const jwt = require("jsonwebtoken");
+>>>>>>> 5867f216debeb78aea4f0ff34b3319980740e2c0
 
 
 const validateLoginInput = require('../validation/login');
