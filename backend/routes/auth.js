@@ -46,7 +46,7 @@ router.post('/login', (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: email}).then(user => {
+  User.findOne({ email: email}).select('+password').exec((err, user) => {
     if(!user) {
       res.status(404).json({ errors: { email: "Couldn't find account with that email"}});
     } else {
