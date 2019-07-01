@@ -1,12 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-<<<<<<< HEAD
-const { createJWToken, hashPassword } = require('../libs/auth')
-=======
-const constants = require("../constants")
-const jwt = require("jsonwebtoken");
->>>>>>> 5867f216debeb78aea4f0ff34b3319980740e2c0
+const { createJWToken, hashPassword } = require('../libs/auth');
 
 
 const validateLoginInput = require('../validation/login');
@@ -16,29 +11,26 @@ const User = require('../models/User');
 
 router.post('/register', (req, res) => {
 
-  const { errors, isValid } = validateRegisterInput(req.body)
+  const { errors, isValid } = validateRegisterInput(req.body);
 
   if(!isValid){
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then(user => {
-    if(user){
-      res.status(400).json({ errors: { email: "Email already exist in database"}})
-    } else {
-      const newUser = User(req.body);
-      hashPassword(newUser.password)
-      .then((hash) => {
-        newUser.password = hash
+  User
+    .findOne({ email: req.body.email })
+    .then(user => {
+      if(user){
+        res.status(400).json({ errors: { email: "Email already exist in database"}});
+      } else {
+        const newUser = User(req.body);
         newUser
-        .save()
-        .then(user => res.json(user))
-        .catch(err => console.log(`[error] User save ${err}`))
-      })
-      .catch(err => console.log(`[error] Hash password ${err}`))
-    }
+          .save()
+          .then(user => res.json(user))
+          .catch(err => console.log(`[error] User save ${err}`));
+      }
+    });
   });
-});
 
 router.post('/login', (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
@@ -54,17 +46,17 @@ router.post('/login', (req, res) => {
     } else {
       bcrypt.compare(password, user.password).then(isMatch => {
         if(isMatch) {
-          let token = createJWToken({id: user.id})
+          let token = createJWToken({id: user.id});
           return res.json({
             success: true,
             token: `${token}`
-          })
+          });
         } else {
           return res.status(403).json({ errors: { password: "Password incorrect"}});
         }
-      })
+      });
     }
-  })
+  });
 })
 
 module.exports = router;
