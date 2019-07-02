@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { createJWToken } = require('../libs/auth')
 
-
 const validateLoginInput = require('../validation/login');
 const validateRegisterInput = require('../validation/register');
 
