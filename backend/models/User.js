@@ -1,7 +1,10 @@
 const { hashPassword } = require('../libs/auth');
 const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose")
+const { hashPassword } = require('../libs/auth')
+
+const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
   email: {
@@ -36,6 +39,24 @@ UserSchema.pre('save', async function(next) {
   }
 });
 
-const User = mongoose.model("users", UserSchema);
+UserSchema.pre(
+  'save', 
+  function (next) {
+    if(!this.isModified('password')) {
+      return next();
+    }
+
+    hashPassword(this.password)
+    .then(hash => {
+      this.password = hash;
+      next();
+    })
+    .catch(err => {
+      console.log(`[error] Hashing password ${err}`)
+    })
+  }
+)
+
+const User = mongoose.model("users", UserSchema)
 
 module.exports = User;

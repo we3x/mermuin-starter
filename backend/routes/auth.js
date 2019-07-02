@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const { createJWToken, hashPassword } = require('../libs/auth');
-
+const { createJWToken } = require('../libs/auth')
 
 const validateLoginInput = require('../validation/login');
 const validateRegisterInput = require('../validation/register');
@@ -23,8 +22,9 @@ router.post('/register', async (req, res) => {
     if(user){
       res.status(400).json({ errors: { email: "Email already exist in database"}});
     } else {
-      const newUser = await User(req.body).save();
-      return res.json(newUser);
+      const newUser = User(req.body);
+      newUser.save()
+      return res.json({ message: 'Success create user'})
     }
 
   } catch(err) {
@@ -41,20 +41,21 @@ router.post('/login', (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: email}).select('+password').exec(async (err, user) => {
+  User.findOne({ email: email}).select('+password').exec((err, user) => {
     if(!user || err) {
       res.status(404).json({ errors: { email: "Couldn't find account with that email"}});
     } else {
-      let isMatch = await bcrypt.compare(password, user.password);
-      if(isMatch) {
-        let token = createJWToken({id: user.id});
-        return res.json({
-          success: true,
-          token: `${token}`
-        });
-      } else {
-        return res.status(403).json({ errors: { password: "Password incorrect"}});
-      }
+      bcrypt.compare(password, user.password).then(isMatch => {
+        if(isMatch) {
+          let token = createJWToken({id: user.id})
+          return res.json({
+            success: true,
+            token: `${token}`
+          })
+        } else {
+          return res.status(403).json({ errors: { password: "Password incorrect"}});
+        }
+      })
     }
   });
 });
