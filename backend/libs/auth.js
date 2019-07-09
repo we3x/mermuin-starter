@@ -34,6 +34,7 @@ const hashPassword = (password) => {
     try {
       let salt = await bcrypt.genSalt(10);
       let hash = await bcrypt.hash(password, salt);
+      resolve(hash);
     } catch(err) {
       reject(err);
     }
