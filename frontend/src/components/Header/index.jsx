@@ -1,6 +1,12 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom';
 import { logOut } from '../../utils'
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+
+
 
 const Header = (props) => {
   const handleLogOut = ({ push }) => {
@@ -8,9 +14,14 @@ const Header = (props) => {
     push('/login')
   }
   return (
-    <div>
-      <button onClick={() => handleLogOut(props.history)}>Log Out</button>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6">
+            News
+        </Typography>
+        <Button onClick={() => handleLogOut(props.history)} color="inherit">Log Out</Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 
