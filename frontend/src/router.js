@@ -3,19 +3,15 @@ import { Router as ReactRouter, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history'
 
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard'
 
-const Dashboard = () => {
-  return (
-    <div>
-      Dashboard
-    </div>
-  )
-}
+import AuthRoute from './components/AuthRoute'
+import Header from './components/Header';
 
 const hist = createBrowserHistory()
 
 const routes = [
-  { path: "/", name: "Dashboard", component: Dashboard},
+  { path: "/", name: "Dashboard", component: Dashboard, auth: true},
   { path: "/login", name: "Login", component: Login},
 ]
 
@@ -23,14 +19,24 @@ const routes = [
 const Router = () => {
   return (
     <ReactRouter history={hist}>
+      <Header history={hist} />
       <Switch>
         {routes.map((prop, key) => {
-          const Page = prop.component
+          let Page = prop.component
           return (
             <Route 
               exact
               path={prop.path}
-              render={(matchProps) => <Page {...matchProps} />}
+              render={(matchProps) => {
+                if(prop.auth)
+                  return (
+                    <AuthRoute>
+                      <Page {...matchProps}/>
+                    </AuthRoute>
+                  )
+                else 
+                  return <Page {...matchProps} />
+              }}
               key={key}
             />
           )}

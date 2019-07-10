@@ -7,13 +7,14 @@ export function useLogin() {
 
   const login = (email, password) => {
     dispatch(actions.login.begin());
-    axios.post('localhost:5000/api/auth/login', {email, password})
-      .then(token => {
+    axios.post('http://localhost:5000/api/auth/login', {email, password})
+      .then(data => {
+        let { token } = data.data
         dispatch(actions.login.success(token))
         window.localStorage.setItem('token', token)
       })
       .catch(error => {
-        dispatch(actions.login.fail(error))
+        dispatch(actions.login.fail(error.data))
       })
   }
 

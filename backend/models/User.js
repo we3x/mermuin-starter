@@ -1,9 +1,6 @@
 const { hashPassword } = require('../libs/auth');
 const mongoose = require("mongoose");
 
-const mongoose = require("mongoose")
-const { hashPassword } = require('../libs/auth')
-
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
