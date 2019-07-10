@@ -6,10 +6,7 @@ function App() {
   return (
     <div>
       <StoreProvider>
-        {/* <Router /> */}
-        <div>
-          Hello World
-        </div>
+        <Router />
       </StoreProvider>
     </div>
   );

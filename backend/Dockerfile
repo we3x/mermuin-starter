@@ -2,5 +2,5 @@ FROM node:latest
 
 # set working directory
 RUN mkdir /api
-COPY . /frontend
+COPY . /api
 WORKDIR /api
