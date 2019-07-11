@@ -1,9 +1,12 @@
-import { useContext } from 'react'
-import { StoreContext } from '../Store'
-import axios from 'axios'
+import { useContext } from 'react';
+import { StoreContext } from '../Store';
+import axios from 'axios';
 
 export function useLogin() {
-  const { state, actions, dispatch} = useContext(StoreContext)
+  const { state, actions, dispatch} = useContext(StoreContext);
+  const context = useContext(StoreContext);
+  debugger;
+
 
   const login = (email, password) => {
     dispatch(actions.login.begin());
