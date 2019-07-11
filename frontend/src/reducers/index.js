@@ -1,4 +1,5 @@
 import { register as loginRegister, reducer as loginReducer } from './loginReducer';
+import combineReducers from './combineReducers';
 
 export const initialState = {
   token: '',
@@ -15,8 +16,6 @@ export const actions = {
   setToken: (token) => ({ type: types.SET_TOKEN, token}),
 };
 
-loginRegister(initialState, actions);
-
 const userReducer = (state, action) => {
   switch(action.type){
     case types.SET_TOKEN:
@@ -28,7 +27,7 @@ const userReducer = (state, action) => {
   }
 };
 
-export const reducer = (state, action) => ({
-  login: loginReducer(state, action),
-  user: userReducer(state, action)
-});
+export const reducer = combineReducers(initialState, {
+  login: loginReducer,
+  user: userReducer
+})

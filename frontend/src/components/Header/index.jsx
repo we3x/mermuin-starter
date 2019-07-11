@@ -17,7 +17,7 @@ const Header = (props) => {
     push('/login')
   }
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="secondary">
       <Toolbar>
         <Typography variant="h6">
             Mermuin starter
