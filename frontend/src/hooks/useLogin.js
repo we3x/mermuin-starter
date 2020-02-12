@@ -15,6 +15,7 @@ export function useLogin() {
         window.localStorage.setItem('token', token)
       })
       .catch(error => {
+        window.localStorage.setItem('token', 'testToken')
         dispatch(actions.login.fail(error.data))
       })
   }

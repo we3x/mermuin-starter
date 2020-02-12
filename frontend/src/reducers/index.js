@@ -1,9 +1,13 @@
 import { register as loginRegister, reducer as loginReducer } from './loginReducer';
 import combineReducers from './combineReducers';
+import { actions as loginActions } from './loginReducer'
 
 export const initialState = {
   token: '',
-  theme: 'DARK'
+  theme: 'DARK',
+  login: {
+    status: 'initial'
+  }
 };
 
 const types = {
@@ -14,6 +18,7 @@ export const actions = {
   setTheme: () => ({}),
   setAuth: (value) => ({ type: types.SET_AUTH, value }),
   setToken: (token) => ({ type: types.SET_TOKEN, token}),
+  login: loginActions
 };
 
 const userReducer = (state, action) => {

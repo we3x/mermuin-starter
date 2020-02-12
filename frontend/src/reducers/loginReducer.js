@@ -16,7 +16,7 @@ export const actions = {
   fail: (error) => ({type: types.ERROR, error})
 }
 
-export const reducer = (state, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.LOGIN:
       return { ...initialState }
